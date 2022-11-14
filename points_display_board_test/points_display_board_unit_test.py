@@ -18,3 +18,8 @@ def test_create_club(mocker):
                       "email": "example@gmail.com",
                       "points": "30"}
     assert create_club() == expected_value
+
+
+def test_status_code_ok_index(client):
+    response = client.get('/index')
+    assert response.status_code == 200
