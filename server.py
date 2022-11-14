@@ -58,6 +58,10 @@ def purchase_places():
 
 
 # TODO: Add route for points display
+# creating the route that let the secretary to see clubs and their points
+@app.route('/points_board', methods=['GET'])
+def get_points_of_clubs():
+    return render_template('points_board.html', clubs=clubs)
 
 
 @app.route('/logout')
