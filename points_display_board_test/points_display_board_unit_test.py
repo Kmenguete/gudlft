@@ -1,4 +1,5 @@
 from gudlft.main import create_club
+from gudlft.server import clubs
 
 
 class ClubMockResponse:
@@ -36,5 +37,17 @@ def test_should_access_to_welcome_page(client):
 
 
 def test_should_access_to_points_boards(client):
-    response = client.get('/points_board')
+    response = client.get('/points_board', data=clubs, follow_redirects=True)
+    assert response.status_code == 200
+    data = response.data.decode()
+    assert data.find(clubs) == -1
+
+
+def test_should_return_to_welcome_page(client):
+    response = client.get('/show_summary')
+    assert response.status_code == 200
+
+
+def test_should_logout(client):
+    response = client.get('/logout', follow_redirects=True)
     assert response.status_code == 200
