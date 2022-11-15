@@ -21,20 +21,14 @@ competitions = load_competitions()
 clubs = load_clubs()
 
 
-def create_app(config):
-    app = Flask(__name__)
-    app.config.from_object(config)
-
-    @app.route('/')
-    def index():
-        return render_template('index.html')
-
-    return app
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
 @app.route('/show_summary', methods=['POST'])
 def show_summary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
+    club = [club for club in clubs if club['email'] == request.form['email']]
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
@@ -68,6 +62,12 @@ def purchase_places():
 @app.route('/points_board', methods=['GET'])
 def get_points_of_clubs():
     return render_template('points_board.html', clubs=clubs)
+
+
+@app.route('/back_to_welcome_page', methods=['GET'])
+def get_back_to_welcome_page():
+    club = [club for club in clubs]
+    return render_template('welcome.html', club=club, competitions=competitions)
 
 
 @app.route('/logout')
