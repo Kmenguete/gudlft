@@ -1,5 +1,6 @@
-from gudlft.main import create_club
-from gudlft.server import clubs
+from main import create_club
+from server import clubs
+from conftest import client
 
 
 class ClubMockResponse:
@@ -11,9 +12,12 @@ class ClubMockResponse:
                 "points": "30"}
 
 
-def test_create_club(mocker):
+def test_create_club(monkeypatch):
 
-    mocker.patch('main.Club', return_value=ClubMockResponse())
+    def mock_get(*args, **kwargs):
+        return ClubMockResponse()
+
+    monkeypatch.setattr('main.Club', mock_get)
 
     expected_value = {"name": "Club Test",
                       "email": "example@gmail.com",
