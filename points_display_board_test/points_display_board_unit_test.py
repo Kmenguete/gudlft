@@ -1,6 +1,5 @@
 from main import create_club
 from server import clubs
-from conftest import client
 
 
 class ClubMockResponse:
@@ -26,7 +25,7 @@ def test_create_club(monkeypatch):
 
 
 def test_status_code_ok_index(client):
-    response = client.get('/index')
+    response = client.get('/')
     assert response.status_code == 200
 
 
@@ -41,14 +40,14 @@ def test_should_access_to_welcome_page(client):
 
 
 def test_should_access_to_points_boards(client):
-    response = client.get('/points_board', data=clubs, follow_redirects=True)
+    response = client.get('/points_board', data=[club for club in clubs], follow_redirects=True)
     assert response.status_code == 200
     data = response.data.decode()
-    assert data.find(clubs) == -1
+    assert data.find("<ul><li>club['name']<br/>Points available: club['points]<li><ul>") == -1
 
 
 def test_should_return_to_welcome_page(client):
-    response = client.get('/show_summary')
+    response = client.get('/back_to_welcome_page')
     assert response.status_code == 200
 
 
