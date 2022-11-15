@@ -40,7 +40,7 @@ def test_should_access_to_welcome_page(client):
 
 
 def test_should_access_to_points_boards(client):
-    response = client.get('/points_board', data=[club for club in clubs], follow_redirects=True)
+    response = client.get('/points_board', data={}, follow_redirects=True)
     assert response.status_code == 200
     data = response.data.decode()
     assert data.find("<ul><li>club['name']<br/>Points available: club['points]<li><ul>") == -1
