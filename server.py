@@ -3,13 +3,13 @@ from flask import Flask, render_template, request, redirect, flash, url_for
 
 
 def load_clubs():
-    with open('clubs.json') as c:
+    with open('gudlft/clubs.json') as c:
         list_of_clubs = json.load(c)['clubs']
         return list_of_clubs
 
 
 def load_competitions():
-    with open('competitions.json') as comps:
+    with open('gudlft/competitions.json') as comps:
         list_of_Competitions = json.load(comps)['competitions']
         return list_of_Competitions
 
@@ -21,9 +21,15 @@ competitions = load_competitions()
 clubs = load_clubs()
 
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+def create_app(config):
+    app = Flask(__name__)
+    app.config.from_object(config)
+
+    @app.route('/')
+    def index():
+        return render_template('index.html')
+
+    return app
 
 
 @app.route('/show_summary', methods=['POST'])
