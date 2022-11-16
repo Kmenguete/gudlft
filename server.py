@@ -3,13 +3,13 @@ from flask import Flask, render_template, request, redirect, flash, url_for
 
 
 def load_clubs():
-    with open('clubs.json') as c:
+    with open('gudlft/clubs.json') as c:
         list_of_clubs = json.load(c)['clubs']
         return list_of_clubs
 
 
 def load_competitions():
-    with open('competitions.json') as comps:
+    with open('gudlft/competitions.json') as comps:
         list_of_Competitions = json.load(comps)['competitions']
         return list_of_Competitions
 
@@ -28,7 +28,7 @@ def index():
 
 @app.route('/show_summary', methods=['POST'])
 def show_summary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
+    club = [club for club in clubs if club['email'] == request.form['email']]
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
@@ -48,12 +48,24 @@ def purchase_places():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     places_required = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
-    flash('Great-booking complete!')
+    if places_required > 12:
+        flash('You cannot book more than 12 places in a competition!')
+        return render_template('booking.html', club=club, competitions=competitions)
+    else:
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
+        flash('Great-booking complete!')
+        return render_template('welcome.html', club=club, competitions=competitions)
+
+
+@app.route('/points_board', methods=['GET'])
+def get_points_of_clubs():
+    return render_template('points_board.html', clubs=clubs)
+
+
+@app.route('/back_to_welcome_page', methods=['GET'])
+def get_back_to_welcome_page():
+    club = [club for club in clubs]
     return render_template('welcome.html', club=club, competitions=competitions)
-
-
-# TODO: Add route for points display
 
 
 @app.route('/logout')
