@@ -34,8 +34,8 @@ def show_summary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
-    found_club = [c for c in clubs if c['name'] == club][0]
-    found_competition = [c for c in competitions if c['name'] == competition][0]
+    found_club = [c for c in clubs if c['name'] == club]
+    found_competition = [c for c in competitions if c['name'] == competition]
     if found_club and found_competition:
         return render_template('booking.html', club=found_club, competition=found_competition)
     else:
