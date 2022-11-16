@@ -11,6 +11,9 @@ class ClubMockResponse:
                 "email": "example@gmail.com",
                 "points": "30"}
 
+    def __getitem__(self, item):
+        return self.get_info()
+
 
 class CompetitionMockResponse:
 
@@ -65,3 +68,17 @@ def test_should_access_to_welcome_page(client):
 def test_should_access_to_book_places_page(client):
     response = client.get('/book/<competition>/<club>')
     assert response.status_code == 200
+
+
+def test_should_update_points_of_club(client):
+    club = ClubMockResponse.get_info()
+    competition = CompetitionMockResponse.get_info()
+    response = client.post('/purchase_places',
+                           data={"club": club['name'],
+                                 "competition": competition['name'],
+                                 "places": 6},
+                           follow_redirects=True)
+    assert response.status_code == 200
+    data = response.data.decode()
+    assert data.find('How many places?') == -1
+    assert int(club['points']) == 24
