@@ -60,3 +60,8 @@ def test_should_access_to_welcome_page(client):
     assert response.status_code == 200
     data = response.data.decode()
     assert data.find("Welcome to the GUDLFT Registration Portal!") == -1
+
+
+def test_should_access_to_book_places_page(client):
+    response = client.get('/book/<competition>/<club>')
+    assert response.status_code == 200
