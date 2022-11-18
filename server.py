@@ -55,10 +55,11 @@ def get_club():
 
 def update_points_of_club(club, places_required):
     club['points'] = int(club['points']) - places_required
-    clubs_file = open('gudlft/clubs.json', "w")
-    json.dump(clubs, clubs_file)
+    clubs_file = open("gudlft/clubs.json", "w")
+    json_clubs = json.load(clubs_file)
+    json.dump(json_clubs, clubs_file)
     clubs_file.close()
-    return int(club['points'])
+    return club
 
 
 @app.route('/purchase_places', methods=['POST'])
