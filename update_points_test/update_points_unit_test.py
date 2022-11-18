@@ -79,7 +79,7 @@ def test_should_update_points(client):
                                  "places": 6},
                            follow_redirects=True)
     assert response.status_code == 200
-    expected_value = 24
-    assert int(club['points']) == expected_value
     data = response.data.decode()
     assert data.find('How many places?') == -1
+    expected_value = 24
+    assert int(club['points']) == expected_value
