@@ -53,10 +53,17 @@ def get_club():
         return club
 
 
+def find_club_to_update_his_points(places_required):
+    for club in clubs:
+        if club['name'] == request.form['club']:
+            club['points'] = int(club['points']) - places_required
+    return clubs
+
+
 def update_points_of_club(club, places_required):
-    club['points'] = int(club['points']) - places_required
     clubs_file = open("gudlft/clubs.json", "w")
     json_clubs = json.load(clubs_file)
+    json_clubs['clubs'] = find_club_to_update_his_points(places_required)
     json.dump(json_clubs, clubs_file)
     clubs_file.close()
     return club
