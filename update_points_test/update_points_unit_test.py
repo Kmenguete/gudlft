@@ -70,7 +70,7 @@ def test_should_access_to_book_places_page(client):
     assert response.status_code == 200
 
 
-def test_should_update_points_of_club(client):
+def test_should_update_points(client):
     club = ClubMockResponse.get_info()
     competition = CompetitionMockResponse.get_info()
     response = client.post('/purchase_places',
@@ -79,6 +79,7 @@ def test_should_update_points_of_club(client):
                                  "places": 6},
                            follow_redirects=True)
     assert response.status_code == 200
+    expected_value = 24
+    assert int(club['points']) == expected_value
     data = response.data.decode()
     assert data.find('How many places?') == -1
-    assert int(club['points']) == 24
