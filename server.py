@@ -53,10 +53,12 @@ def get_club():
         return club
 
 
-def update_points_of_club(club, name, email, points_of_club, places_required):
-    updated_points_of_club = {"name": name, "email": email, "points": points_of_club - places_required}
-    club.update(updated_points_of_club)
-    return club
+def update_points_of_club(club, places_required):
+    club['points'] = int(club['points']) - places_required
+    clubs_file = open('gudlft/clubs.json', "w")
+    json.dump(clubs, clubs_file)
+    clubs_file.close()
+    return int(club['points'])
 
 
 @app.route('/purchase_places', methods=['POST'])
@@ -66,7 +68,7 @@ def purchase_places():
     if competition['name'] == request.form['competition'] and club['name'] == request.form['club']:
         places_required = int(request.form['places'])
         competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
-        update_points_of_club(club, club['name'], club['email'], club['points'], places_required)
+        update_points_of_club(club, places_required)
         flash('Great-booking complete!')
         return render_template('welcome.html', club=club, competition=competition)
     else:
