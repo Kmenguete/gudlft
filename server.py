@@ -53,22 +53,6 @@ def get_club():
         return club
 
 
-def find_club_to_update_his_points(places_required):
-    for club in clubs:
-        if club['name'] == request.form['club']:
-            club['points'] = int(club['points']) - places_required
-    return clubs
-
-
-def update_points_of_club(club, places_required):
-    clubs_file = open("gudlft/clubs.json", "w")
-    json_clubs = json.load(clubs_file)
-    json_clubs['clubs'] = find_club_to_update_his_points(places_required)
-    json.dump(json_clubs, clubs_file)
-    clubs_file.close()
-    return club
-
-
 @app.route('/purchase_places', methods=['POST'])
 def purchase_places():
     competition = get_competition()
@@ -76,12 +60,16 @@ def purchase_places():
     if competition['name'] == request.form['competition'] and club['name'] == request.form['club']:
         places_required = int(request.form['places'])
         competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
-        update_points_of_club(club, places_required)
+        club['points'] = club['points'] - places_required
+        club_file = open("clubs.json", "w")
+        updated_club = json.dumps(club)
+        json.dump(updated_club, club_file)
+        club_file.close()
         flash('Great-booking complete!')
         return render_template('welcome.html', club=club, competition=competition)
     else:
         flash("Sorry a problem occurs during the request :/")
-    return render_template('welcome.html', club=club, competition=competition)
+    return render_template('booking.html', club=club, competition=competition)
 
 
 @app.route('/points_board', methods=['GET'])
