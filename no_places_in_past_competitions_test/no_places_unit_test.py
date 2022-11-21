@@ -76,7 +76,7 @@ def _purchase_places(client, club, competition, places):
                                  "competition": competition['name'],
                                  "places": places},
                            follow_redirects=True)
-    assert response.status_code == 200
+    assert response.status_code == 403
     data = response.data.decode()
     assert data.find("{{competition['name']}}") == -1
 
