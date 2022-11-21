@@ -2,6 +2,8 @@ from main import create_club
 
 from main import create_competition
 
+import server
+
 
 class ClubMockResponse:
 
@@ -9,7 +11,7 @@ class ClubMockResponse:
     def get_info():
         return {"name": "Club Test",
                 "email": "example@gmail.com",
-                "points": "30"}
+                "points": "20"}
 
     def __getitem__(self, item):
         return self.get_info()
@@ -25,7 +27,6 @@ class CompetitionMockResponse:
 
 
 def test_create_club(monkeypatch):
-
     def mock_get(*args, **kwargs):
         return ClubMockResponse()
 
@@ -33,12 +34,11 @@ def test_create_club(monkeypatch):
 
     expected_value = {"name": "Club Test",
                       "email": "example@gmail.com",
-                      "points": "30"}
+                      "points": "20"}
     assert create_club() == expected_value
 
 
 def test_create_competition(monkeypatch):
-
     def mock_get(*args, **kwargs):
         return CompetitionMockResponse()
 
@@ -70,16 +70,25 @@ def test_should_access_to_book_places_page(client):
     assert response.status_code == 200
 
 
-def test_should_update_points(client):
-    club = ClubMockResponse.get_info()
-    competition = CompetitionMockResponse.get_info()
+def _purchase_places(client, club, competition, places):
     response = client.post('/purchase_places',
                            data={"club": club['name'],
                                  "competition": competition['name'],
-                                 "places": 6},
+                                 "places": places},
                            follow_redirects=True)
     assert response.status_code == 200
     data = response.data.decode()
     assert data.find("{{competition['name']}}") == -1
-    expected_value = 24
-    assert int(club['points']) == expected_value
+
+
+def test_should_update_points(client, mocker):
+    clubs = mocker.patch.object(server, 'clubs', [{"name": "Club Test",
+                                                   "email": "example@gmail.com",
+                                                   "points": "20"}])
+    competitions = mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
+                                                                 "date": "2022-06-09 10:00:00",
+                                                                 "numberOfPlaces": "50"}])
+    club = [club for club in clubs][0]
+    competition = [competition for competition in competitions][0]
+    _purchase_places(client, club, competition, 6)
+    assert int(club['points']) == 14
