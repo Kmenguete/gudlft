@@ -80,6 +80,6 @@ def test_should_update_points(client):
                            follow_redirects=True)
     assert response.status_code == 200
     data = response.data.decode()
-    assert data.find('How many places?') == -1
+    assert data.find("{{competition['name']}}") == -1
     expected_value = 24
     assert int(club['points']) == expected_value
