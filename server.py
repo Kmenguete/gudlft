@@ -42,7 +42,7 @@ def book(competition, club):
         print("Here this is clubs: " + str(clubs) + " and here this is competitions: " + str(competitions))
     if club and competition:
         return render_template('booking.html', club=club, competition=competition)
-    elif datetime.strptime(competition['date'], '%m/%d/%y %H:%M:%S') < datetime.now():
+    elif datetime.strptime(competition['date'], '%Y-%m-%d %H:%M:%S') < datetime.now():
         flash('This competition already taken place.')
         return render_template('welcome.html', club=club, competitions=competitions)
     else:
