@@ -67,26 +67,21 @@ def test_should_access_to_welcome_page(client):
     assert data.find("Welcome to the GUDLFT Registration Portal!") == -1
 
 
-def test_should_not_access_to_book_places_page(client, mocker):
-    response = client.get('/book/<competition>/<club>')
+def _book_places_page(client, club, competition):
+    response = client.get('/book/<competition>/<club>', data={"club": club['name'],
+                                                              "competition": competition['name']},
+                          follow_redirects=True)
+
+    assert response.status_code == 302
+
+
+def test_should_not_be_able_to_book_places(client, mocker):
     clubs = mocker.patch.object(server, 'clubs', [{"name": "Club Test",
                                                    "email": "example@gmail.com",
                                                    "points": "20"}])
     competitions = mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
-                                                                 "date": "2022-09-25 10:35:06",
+                                                                 "date": "2018-05-08 10:00:00",
                                                                  "numberOfPlaces": "50"}])
     club = [club for club in clubs][0]
     competition = [competition for competition in competitions][0]
-    if club and datetime.strptime(competition['date'], '%Y-%m-%d %H:%M:%S') < datetime.now():
-        assert response.status_code == 302
-
-
-def _purchase_places(client, club, competition, places):
-    response = client.post('/purchase_places',
-                           data={"club": club['name'],
-                                 "competition": competition['name'],
-                                 "places": places},
-                           follow_redirects=True)
-    assert response.status_code == 200
-    data = response.data.decode()
-    assert data.find("{{competition['name']}}") == -1
+    _book_places_page(client, club, competition)
