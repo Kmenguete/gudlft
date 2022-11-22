@@ -1,3 +1,4 @@
+from flask import flash
 from main import create_club
 
 from main import create_competition
@@ -65,9 +66,14 @@ def test_should_access_to_welcome_page(client):
     assert data.find("Welcome to the GUDLFT Registration Portal!") == -1
 
 
-def test_should_access_to_book_places_page(client):
-    response = client.get('/book/<competition>/<club>')
+def _should_not_access_to_book_places_page(client, club, competition):
+    response = client.get('/book/<competition>/<club>',
+                          data={"club": club['name'],
+                                "competition": competition['name']},
+                          follow_redirects=True)
     assert response.status_code == 200
+    data = response.data.decode()
+    assert data.find("{{competition['name']}}") == -1
 
 
 def _purchase_places(client, club, competition, places):
@@ -76,7 +82,7 @@ def _purchase_places(client, club, competition, places):
                                  "competition": competition['name'],
                                  "places": places},
                            follow_redirects=True)
-    assert response.status_code == 403
+    assert response.status_code == 200
     data = response.data.decode()
     assert data.find("{{competition['name']}}") == -1
 
@@ -90,4 +96,5 @@ def test_should_get_error_message_for_past_competition(client, mocker):
                                                                  "numberOfPlaces": "50"}])
     club = [club for club in clubs][0]
     competition = [competition for competition in competitions][0]
-    _purchase_places(client, club, competition, 6)
+    assert _should_not_access_to_book_places_page(client, club, competition) == flash('This competition already taken '
+                                                                                      'place.')
