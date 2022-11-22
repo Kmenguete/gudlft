@@ -78,7 +78,7 @@ def test_should_not_access_to_book_places_page(client, mocker):
     club = [club for club in clubs][0]
     competition = [competition for competition in competitions][0]
     if club and datetime.strptime(competition['date'], '%Y-%m-%d %H:%M:%S') < datetime.now():
-        assert response.status_code == 403
+        assert response.status_code == 302
 
 
 def _purchase_places(client, club, competition, places):
