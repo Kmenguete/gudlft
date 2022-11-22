@@ -71,7 +71,7 @@ def test_should_access_to_book_places_page(client, mocker):
                                                    "email": "example@gmail.com",
                                                    "points": "20"}])
     competitions = mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
-                                                                 "date": "2022-06-09 10:00:00",
+                                                                 "date": "2023-02-15 10:00:00",
                                                                  "numberOfPlaces": "50"}])
     club = [club for club in clubs][0]
     competition = [competition for competition in competitions][0]
