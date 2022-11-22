@@ -1,5 +1,5 @@
 import json
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, request, redirect, flash, url_for, make_response
 from datetime import datetime
 
 
@@ -36,15 +36,17 @@ def show_summary():
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
     try:
-        club = [c for c in clubs if c['name'] == club][0]
-        competition = [c for c in competitions if c['name'] == competition][0]
+        found_club = [c for c in clubs if c['name'] == club][0]
+        found_competition = [c for c in competitions if c['name'] == competition][0]
     except IndexError:
-        print("Here this is clubs: " + str(clubs) + " and here this is competitions: " + str(competitions))
-    if club and competition:
+        found_club = [club]
+        found_competition = [competition]
+    if found_club and found_competition:
         return render_template('booking.html', club=club, competition=competition)
     elif datetime.strptime(competition['date'], '%Y-%m-%d %H:%M:%S') < datetime.now():
-        flash('This competition already taken place.')
-        return render_template('welcome.html', club=club, competitions=competitions)
+        response = make_response("<p>You cannot book places in a past competition<p>")
+        response.status_code = 302
+        return response
     else:
         flash("Something went wrong-please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
