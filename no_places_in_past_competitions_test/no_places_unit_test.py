@@ -66,14 +66,9 @@ def test_should_access_to_welcome_page(client):
     assert data.find("Welcome to the GUDLFT Registration Portal!") == -1
 
 
-def _should_not_access_to_book_places_page(client, club, competition):
-    response = client.get('/book/<competition>/<club>',
-                          data={"club": club['name'],
-                                "competition": competition['name']},
-                          follow_redirects=True)
-    assert response.status_code == 200
-    data = response.data.decode()
-    assert data.find("{{competition['name']}}") == -1
+def test_should_not_access_to_book_places_page(client):
+    response = client.get('/book/<competition>/<club>')
+    assert response.status_code == 403
 
 
 def _purchase_places(client, club, competition, places):
@@ -85,16 +80,3 @@ def _purchase_places(client, club, competition, places):
     assert response.status_code == 200
     data = response.data.decode()
     assert data.find("{{competition['name']}}") == -1
-
-
-def test_should_get_error_message_for_past_competition(client, mocker):
-    clubs = mocker.patch.object(server, 'clubs', [{"name": "Club Test",
-                                                   "email": "example@gmail.com",
-                                                   "points": "20"}])
-    competitions = mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
-                                                                 "date": "2022-06-09 10:00:00",
-                                                                 "numberOfPlaces": "50"}])
-    club = [club for club in clubs][0]
-    competition = [competition for competition in competitions][0]
-    assert _should_not_access_to_book_places_page(client, club, competition) == flash('This competition already taken '
-                                                                                      'place.')
