@@ -68,8 +68,9 @@ def test_should_access_to_welcome_page(client):
 
 
 def _book_places_page(client, club, competition):
-    response = client.get('/book/<competition>/<club>', data={"club": club['name'],
-                                                              "competition": competition['name']},
+    response = client.get('/book/<competition>/<club>',
+                          data={"club": club['name'],
+                                "competition": competition['name']},
                           follow_redirects=True)
 
     assert response.status_code == 302
