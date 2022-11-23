@@ -33,7 +33,7 @@ def show_summary():
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
-@app.route('/book/<competition>/<club>')
+@app.route('/book/<competition>/<club>', methods=['GET'])
 def book(competition, club):
     found_club = [c for c in clubs if c['name'] == club][0]
     found_competition = [c for c in competitions if c['name'] == competition][0]
