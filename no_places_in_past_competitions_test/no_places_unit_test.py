@@ -67,7 +67,7 @@ def test_should_access_to_welcome_page(client):
     assert data.find("Welcome to the GUDLFT Registration Portal!") == -1
 
 
-def _book_places_page(client, club, competition):
+def _book_places_page(client, competition, club):
     response = client.get('/book/<competition>/<club>',
                           data={"club": club['name'],
                                 "competition": competition['name']},
@@ -85,4 +85,4 @@ def test_should_not_be_able_to_book_places(client, mocker):
                                                                  "numberOfPlaces": "50"}])
     club = [club for club in clubs][0]
     competition = [competition for competition in competitions][0]
-    _book_places_page(client, club, competition)
+    _book_places_page(client, competition, club)
