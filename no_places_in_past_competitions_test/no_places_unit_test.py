@@ -67,8 +67,7 @@ def test_should_access_to_welcome_page(client):
 
 def _book_places_page(client, competition, club):
     response = client.get('/book/<competition>/<club>',
-                          data={"competition": competition,
-                                "club": club},
+                          data=dict(competition=competition, club=club),
                           follow_redirects=True)
 
     print("This is a competition in _book_places_page function: " + str(competition))
@@ -76,9 +75,8 @@ def _book_places_page(client, competition, club):
     print("This is a club in _book_places_page function: " + str(club))
     print("***************************************************************************")
 
-    data = response.data.decode
-
     assert response.status_code == 302
+    data = response.data.decode
     assert data.find('Book Places') == -1
 
 
