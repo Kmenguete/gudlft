@@ -71,8 +71,14 @@ def _book_places_page(client, competition, club):
                                 "club": club},
                           follow_redirects=True)
 
-    assert response.status_code == 302
+    print("This is a competition in _book_places_page function: " + str(competition))
+    print("***************************************************************************")
+    print("This is a club in _book_places_page function: " + str(club))
+    print("***************************************************************************")
+
     data = response.data.decode
+
+    assert response.status_code == 302
     assert data.find('Book Places') == -1
 
 
@@ -83,6 +89,14 @@ def test_should_not_be_able_to_book_places(client, mocker):
     competitions = mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
                                                                  "date": "2018-05-08 10:00:00",
                                                                  "numberOfPlaces": "50"}])
-    club = [club for club in clubs][0]
-    competition = [competition for competition in competitions][0]
+    club = clubs[0]
+    competition = competitions[0]
+    print("Here are clubs: " + str(clubs))
+    print("***************************************************************************")
+    print("Here are competitions: " + str(competitions))
+    print("***************************************************************************")
+    print("This is a club: " + str(club))
+    print("***************************************************************************")
+    print("This is a competition: " + str(competition))
+    print("***************************************************************************")
     _book_places_page(client, competition, club)
