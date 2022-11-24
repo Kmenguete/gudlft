@@ -72,6 +72,8 @@ def _book_places_page(client, competition, club):
                           follow_redirects=True)
 
     assert response.status_code == 302
+    data = response.data.decode
+    assert data.find('Book Places') == -1
 
 
 def test_should_not_be_able_to_book_places(client, mocker):
