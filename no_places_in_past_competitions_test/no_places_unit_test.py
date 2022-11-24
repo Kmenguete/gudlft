@@ -2,8 +2,6 @@ from main import create_club
 
 from main import create_competition
 
-from datetime import datetime
-
 import server
 
 
@@ -24,7 +22,7 @@ class CompetitionMockResponse:
     @staticmethod
     def get_info():
         return {"name": "Competition Test",
-                "date": "2022-06-09 10:00:00",
+                "date": "2018-05-08 10:00:00",
                 "numberOfPlaces": "50"}
 
 
@@ -47,7 +45,7 @@ def test_create_competition(monkeypatch):
     monkeypatch.setattr('main.Competition', mock_get)
 
     expected_value = {"name": "Competition Test",
-                      "date": "2022-06-09 10:00:00",
+                      "date": "2018-05-08 10:00:00",
                       "numberOfPlaces": "50"}
     assert create_competition() == expected_value
 
