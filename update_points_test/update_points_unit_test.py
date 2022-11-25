@@ -22,7 +22,7 @@ class CompetitionMockResponse:
     @staticmethod
     def get_info():
         return {"name": "Competition Test",
-                "date": "2022-06-09 10:00:00",
+                "date": "2023-06-09 10:00:00",
                 "numberOfPlaces": "50"}
 
 
@@ -45,7 +45,7 @@ def test_create_competition(monkeypatch):
     monkeypatch.setattr('main.Competition', mock_get)
 
     expected_value = {"name": "Competition Test",
-                      "date": "2022-06-09 10:00:00",
+                      "date": "2023-06-09 10:00:00",
                       "numberOfPlaces": "50"}
     assert create_competition() == expected_value
 
@@ -65,9 +65,27 @@ def test_should_access_to_welcome_page(client):
     assert data.find("Welcome to the GUDLFT Registration Portal!") == -1
 
 
-def test_should_access_to_book_places_page(client):
+def _should_find_competition_and_club(client, competition, club):
     response = client.get('/book/<competition>/<club>')
+    assert competition == {"name": "Competition Test",
+                           "date": "2023-06-09 10:00:00",
+                           "numberOfPlaces": "50"}
+    assert club == {"name": "Club Test",
+                    "email": "example@gmail.com",
+                    "points": "20"}
     assert response.status_code == 200
+
+
+def test_should_access_to_book_places_page(client, mocker):
+    clubs = mocker.patch.object(server, 'clubs', [{"name": "Club Test",
+                                                   "email": "example@gmail.com",
+                                                   "points": "20"}])
+    competitions = mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
+                                                                 "date": "2023-06-09 10:00:00",
+                                                                 "numberOfPlaces": "50"}])
+    club = [club for club in clubs][0]
+    competition = [competition for competition in competitions][0]
+    _should_find_competition_and_club(client, competition, club)
 
 
 def _purchase_places(client, club, competition, places):
@@ -86,7 +104,7 @@ def test_should_update_points(client, mocker):
                                                    "email": "example@gmail.com",
                                                    "points": "20"}])
     competitions = mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
-                                                                 "date": "2022-06-09 10:00:00",
+                                                                 "date": "2023-06-09 10:00:00",
                                                                  "numberOfPlaces": "50"}])
     club = [club for club in clubs][0]
     competition = [competition for competition in competitions][0]
