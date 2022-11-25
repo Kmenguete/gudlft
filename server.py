@@ -40,7 +40,7 @@ def book(competition, club):
     if found_club and found_competition:
         if datetime.strptime(competition['date'], '%Y-%m-%d %H:%M:%S') < datetime.now():
             response = make_response("<p>You cannot book places in a past competition<p>")
-            response.status_code = 302
+            response.status_code = 400
             return response
         else:
             return render_template('booking.html', club=club, competition=competition)
