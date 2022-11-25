@@ -66,7 +66,7 @@ def test_should_access_to_welcome_page(client):
 
 
 def _book_places_page(client, competition, club):
-    response = client.get('/book/<competition>/<club>', follow_redirects=True)
+    response = client.get('/book/<competition>/<club>')
 
     assert competition == {"name": "Competition Test",
                            "date": "2018-05-08 10:00:00",
