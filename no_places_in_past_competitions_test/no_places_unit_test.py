@@ -66,13 +66,17 @@ def test_should_access_to_welcome_page(client):
 
 
 def _book_places_page(client, competition, club):
-    response = client.get('/book/<competition>/<club>',
-                          data=dict(competition=competition, club=club),
-                          follow_redirects=True)
+    response = client.get('/book/<competition>/<club>', follow_redirects=True)
+
+    assert competition == {"name": "Competition Test",
+                           "date": "2018-05-08 10:00:00",
+                           "numberOfPlaces": "50"}
+
+    assert club == {"name": "Club Test",
+                    "email": "example@gmail.com",
+                    "points": "20"}
 
     assert response.status_code == 400
-    data = response.data.decode
-    assert data.find('Book Places') == -1
 
 
 def test_should_not_be_able_to_book_places(client, mocker):
