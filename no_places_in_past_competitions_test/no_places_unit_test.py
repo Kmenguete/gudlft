@@ -70,12 +70,7 @@ def _book_places_page(client, competition, club):
                           data=dict(competition=competition, club=club),
                           follow_redirects=True)
 
-    print("This is a competition in _book_places_page function: " + str(competition))
-    print("***************************************************************************")
-    print("This is a club in _book_places_page function: " + str(club))
-    print("***************************************************************************")
-
-    assert response.status_code == 302
+    assert response.status_code == 400
     data = response.data.decode
     assert data.find('Book Places') == -1
 
@@ -87,14 +82,6 @@ def test_should_not_be_able_to_book_places(client, mocker):
     competitions = mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
                                                                  "date": "2018-05-08 10:00:00",
                                                                  "numberOfPlaces": "50"}])
-    club = clubs[0]
-    competition = competitions[0]
-    print("Here are clubs: " + str(clubs))
-    print("***************************************************************************")
-    print("Here are competitions: " + str(competitions))
-    print("***************************************************************************")
-    print("This is a club: " + str(club))
-    print("***************************************************************************")
-    print("This is a competition: " + str(competition))
-    print("***************************************************************************")
+    club = [c for c in clubs][0]
+    competition = [c for c in competitions][0]
     _book_places_page(client, competition, club)
