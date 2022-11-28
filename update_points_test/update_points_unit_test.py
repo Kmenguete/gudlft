@@ -66,25 +66,21 @@ def test_should_access_to_welcome_page(client):
 
 
 def _should_find_competition_and_club(client, competition, club):
-    response = client.get('/book/<competition>/<club>')
-    assert competition == {"name": "Competition Test",
-                           "date": "2023-06-09 10:00:00",
-                           "numberOfPlaces": "50"}
-    assert club == {"name": "Club Test",
-                    "email": "example@gmail.com",
-                    "points": "20"}
+    response = client.get(f'/book/{competition}/{club}')
+    assert competition == 'Competition Test'
+    assert club == 'Club Test'
     assert response.status_code == 200
 
 
 def test_should_access_to_book_places_page(client, mocker):
-    clubs = mocker.patch.object(server, 'clubs', [{"name": "Club Test",
-                                                   "email": "example@gmail.com",
-                                                   "points": "20"}])
-    competitions = mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
-                                                                 "date": "2023-06-09 10:00:00",
-                                                                 "numberOfPlaces": "50"}])
-    club = [club for club in clubs][0]
-    competition = [competition for competition in competitions][0]
+    mocker.patch.object(server, 'clubs', [{"name": "Club Test",
+                                           "email": "example@gmail.com",
+                                           "points": "20"}])
+    mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
+                                                  "date": "2023-06-09 10:00:00",
+                                                  "numberOfPlaces": "50"}])
+    club = 'Club Test'
+    competition = 'Competition Test'
     _should_find_competition_and_club(client, competition, club)
 
 
