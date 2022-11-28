@@ -66,26 +66,22 @@ def test_should_access_to_welcome_page(client):
 
 
 def _book_places_page(client, competition, club):
-    response = client.get('/book/<competition>/<club>')
+    response = client.get(f'/book/{competition}/{club}')
 
-    assert competition == {"name": "Competition Test",
-                           "date": "2018-05-08 10:00:00",
-                           "numberOfPlaces": "50"}
+    assert competition == 'Competition Test'
 
-    assert club == {"name": "Club Test",
-                    "email": "example@gmail.com",
-                    "points": "20"}
+    assert club == 'Club Test'
 
     assert response.status_code == 400
 
 
 def test_should_not_be_able_to_book_places(client, mocker):
-    clubs = mocker.patch.object(server, 'clubs', [{"name": "Club Test",
-                                                   "email": "example@gmail.com",
-                                                   "points": "20"}])
-    competitions = mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
-                                                                 "date": "2018-05-08 10:00:00",
-                                                                 "numberOfPlaces": "50"}])
-    club = [c for c in clubs][0]
-    competition = [c for c in competitions][0]
+    mocker.patch.object(server, 'clubs', [{"name": "Club Test",
+                                           "email": "example@gmail.com",
+                                           "points": "20"}])
+    mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
+                                                  "date": "2018-05-08 10:00:00",
+                                                  "numberOfPlaces": "50"}])
+    club = 'Club Test'
+    competition = 'Competition Test'
     _book_places_page(client, competition, club)
