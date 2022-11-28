@@ -1,5 +1,6 @@
 from main import create_club
 from server import clubs
+import server
 
 
 class ClubMockResponse:
@@ -29,10 +30,13 @@ def test_status_code_ok_index(client):
     assert response.status_code == 200
 
 
-def test_should_access_to_welcome_page(client):
-    email = "example@gmail.com"
+def test_should_access_to_welcome_page(client, mocker):
+    mocker.patch.object(server, 'clubs', [{"name": "Club Test",
+                                           "email": "example@gmail.com",
+                                           "points": "20"}])
+    club = "example@gmail.com"
     response = client.post('/show_summary',
-                           data={"email": email},
+                           data={"email": club},
                            follow_redirects=True)
     assert response.status_code == 200
     data = response.data.decode()
