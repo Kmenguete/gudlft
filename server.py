@@ -38,7 +38,7 @@ def book(competition, club):
     found_club = [c for c in clubs if c['name'] == club][0]
     found_competition = [c for c in competitions if c['name'] == competition][0]
     if found_club and found_competition:
-        if datetime.strptime(competition['date'], '%Y-%m-%d %H:%M:%S') < datetime.now():
+        if datetime.strptime(found_competition['date'], '%Y-%m-%d %H:%M:%S') < datetime.now():
             response = make_response("<p>You cannot book places in a past competition<p>")
             response.status_code = 400
             return response
