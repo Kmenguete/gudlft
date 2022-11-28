@@ -54,10 +54,15 @@ def purchase_places():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     places_required = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
-    club['points'] = int(club['points']) - places_required
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, competition=competition)
+    if places_required > 12:
+        response = make_response("<p>You cannot book more than 12 places per competition<p>")
+        response.status_code = 400
+        return response
+    else:
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
+        club['points'] = int(club['points']) - places_required
+        flash('Great-booking complete!')
+        return render_template('welcome.html', club=club, competition=competition)
 
 
 @app.route('/points_board', methods=['GET'])
