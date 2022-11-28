@@ -55,7 +55,11 @@ def purchase_places():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     places_required = int(request.form['places'])
     if places_required > 12:
-        response = make_response("<p>You cannot book more than 12 places per competition<p>")
+        response = make_response("<p>You cannot book more than 12 places per competition.<p>")
+        response.status_code = 400
+        return response
+    elif places_required > int(club['points']):
+        response = make_response("<p>You cannot use more than your allowed points.<p>")
         response.status_code = 400
         return response
     else:
