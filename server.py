@@ -81,8 +81,13 @@ def get_points_of_clubs():
 
 @app.route('/back_to_welcome_page', methods=['GET'])
 def get_back_to_welcome_page():
-    club = [club for club in clubs]
-    return render_template('welcome.html', club=club, competitions=competitions)
+    try:
+        club = [club for club in clubs][0]
+        return render_template('welcome.html', club=club, competitions=competitions)
+    except IndexError:
+        response = make_response("<p>You did not provide the necessary credentials to access this page.<p>")
+        response.status_code = 401
+        return response
 
 
 @app.route('/logout')
