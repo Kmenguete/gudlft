@@ -81,7 +81,13 @@ def purchase_places():
 
 @app.route('/points_board', methods=['GET'])
 def get_points_of_clubs():
-    return render_template('points_board.html', clubs=clubs)
+    try:
+        club = [c for c in clubs][0]
+        return render_template('points_board.html', clubs=clubs), club
+    except IndexError:
+        response = make_response("<p>You did not provide the necessary credentials to access this page.<p>")
+        response.status_code = 401
+        return response
 
 
 @app.route('/back_to_welcome_page', methods=['GET'])
