@@ -38,13 +38,24 @@ def show_summary():
         return response
 
 
+def check_for_unauthorized_access_to_book_page(club, found_club):
+    if found_club != club:
+        response = make_response("<p>You do not have the permission to perform this action.<p>")
+        response.status_code = 403
+    return found_club
+
+
 @app.route('/book/<competition>/<club>', methods=['GET'])
 def book(competition, club):
     try:
         found_club = [c for c in clubs if c['name'] == club][0]
         found_competition = [c for c in competitions if c['name'] == competition][0]
         if found_club and found_competition:
-            if datetime.strptime(found_competition['date'], '%Y-%m-%d %H:%M:%S') < datetime.now():
+            if found_club['name'] != club:
+                response = make_response("<p>You do not have the permission to perform this action.<p>")
+                response.status_code = 403
+                return response
+            elif datetime.strptime(found_competition['date'], '%Y-%m-%d %H:%M:%S') < datetime.now():
                 response = make_response("<p>You cannot book places in a past competition<p>")
                 response.status_code = 400
                 return response
