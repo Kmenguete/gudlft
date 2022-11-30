@@ -38,13 +38,6 @@ def show_summary():
         return response
 
 
-def check_for_unauthorized_access_to_book_page(club, found_club):
-    if found_club != club:
-        response = make_response("<p>You do not have the permission to perform this action.<p>")
-        response.status_code = 403
-    return found_club
-
-
 @app.route('/book/<competition>/<club>', methods=['GET'])
 def book(competition, club):
     try:
