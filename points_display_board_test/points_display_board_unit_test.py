@@ -1,5 +1,4 @@
 from main import create_club
-from server import clubs
 import server
 
 
@@ -13,7 +12,6 @@ class ClubMockResponse:
 
 
 def test_create_club(monkeypatch):
-
     def mock_get(*args, **kwargs):
         return ClubMockResponse()
 
@@ -43,8 +41,13 @@ def test_should_access_to_welcome_page(client, mocker):
     assert data.find("Welcome to the GUDLFT Registration Portal!") == -1
 
 
-def test_should_access_to_points_boards(client):
-    response = client.get('/points_board', data=clubs[0], follow_redirects=True)
+def test_should_access_to_points_boards(client, mocker):
+    clubs = mocker.patch.object(server, 'clubs', [{"name": "Club Test",
+                                                   "email": "example@gmail.com",
+                                                   "points": "20"}])
+    club = clubs[0]['name']
+    response = client.get('/points_board', follow_redirects=True)
+    assert club == "Club Test"
     assert response.status_code == 200
     data = response.data.decode()
     assert data.find("<ul><li>club['name']<br/>Points available: club['points]<li><ul>") == -1
