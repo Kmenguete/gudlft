@@ -68,25 +68,6 @@ def test_should_access_to_welcome_page(client, mocker):
     assert data.find("Welcome to the GUDLFT Registration Portal!") == -1
 
 
-def _should_find_competition_and_club(client, competition, club):
-    response = client.get(f'/book/{competition}/{club}')
-    assert competition == 'Competition Test'
-    assert club == 'Club Test'
-    assert response.status_code == 200
-
-
-def test_should_access_to_book_places_page(client, mocker):
-    mocker.patch.object(server, 'clubs', [{"name": "Club Test",
-                                           "email": "example@gmail.com",
-                                           "points": "5"}])
-    mocker.patch.object(server, 'competitions', [{"name": "Competition Test",
-                                                  "date": "2023-06-09 10:00:00",
-                                                  "numberOfPlaces": "50"}])
-    club = 'Club Test'
-    competition = 'Competition Test'
-    _should_find_competition_and_club(client, competition, club)
-
-
 def _book_places_page(client, competition, club):
     club_1 = 'Real Club'
     response = client.get(f'/book/{competition}/{club_1}')
