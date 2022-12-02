@@ -1,8 +1,6 @@
-import pytest
 import server
 
 
-@pytest.fixture
 def test_book_places(client, mocker):
     clubs = mocker.patch.object(server, 'clubs', [{"name": "Club Test",
                                                    "email": "example@gmail.com",
