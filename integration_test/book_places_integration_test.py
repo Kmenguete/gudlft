@@ -17,7 +17,7 @@ def test_book_places(client, mocker):
                            follow_redirects=True)
     assert response_show_summary.status_code == 200
 
-    response_book = client.get(f'/book/{competition}/{club}')
+    response_book = client.get(f'/book/{competition["name"]}/{club["name"]}')
     assert response_book.status_code == 200
 
     places = 6
@@ -30,6 +30,6 @@ def test_book_places(client, mocker):
 
     assert response_purchase_places.status_code == 200
 
-    response_logout = client.get('/logout')
+    response_logout = client.get('/logout', follow_redirects=True)
 
     assert response_logout.status_code == 200
