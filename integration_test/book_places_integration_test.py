@@ -28,4 +28,8 @@ def test_book_places(client, mocker):
                                  "places": places},
                            follow_redirects=True)
 
-    assert response_purchase_places == 200
+    assert response_purchase_places.status_code == 200
+
+    response_logout = client.get('/logout')
+
+    assert response_logout.status_code == 200
