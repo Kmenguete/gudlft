@@ -1,4 +1,4 @@
-from locust import Locust, TaskSet, task, between
+from locust import HttpUser, task, between
 
 
 club = {"name": "Club Test",
@@ -10,7 +10,8 @@ competition = {"name": "Competition Test",
                 "numberOfPlaces": "500"}
 
 
-class ProjectPerformanceTest(TaskSet):
+class ProjectPerformanceTest(HttpUser):
+    wait_time = between(5, 10)
 
     @task
     def index(self):
@@ -18,7 +19,7 @@ class ProjectPerformanceTest(TaskSet):
 
     @task
     def show_summary(self):
-        self.client.post('/show_summary', json={"email": club['email']})
+        self.client.post('/show_summary', {"email": club['email']})
 
     @task
     def book(self):
@@ -29,15 +30,10 @@ class ProjectPerformanceTest(TaskSet):
 
     @task
     def purchase_places(self):
-        self.client.post('/purchase_places', json={"club": club['name'],
-                                                   "competition": competition['name'],
+        self.client.post('/purchase_places', {"club": club['name'],
+                                                    "competition": competition['name'],
                                                    "places": 6})
 
     @task
     def logout(self):
         self.client.get('/logout')
-
-
-class Club(Locust):
-    task_set = ProjectPerformanceTest
-    wait_time = between(5, 10)
