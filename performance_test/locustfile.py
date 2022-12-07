@@ -11,13 +11,12 @@ competition = {"name": "Competition Test",
 
 
 class ProjectPerformanceTest(HttpUser):
-    wait_time = between(5, 10)
+    wait_time = between(1, 5)
 
-    @task
-    def index(self):
+    def on_start(self):
         self.client.get('/')
 
-    @task
+    @task(3)
     def show_summary(self):
         self.client.post('/show_summary', {"email": club['email']})
 
@@ -34,6 +33,5 @@ class ProjectPerformanceTest(HttpUser):
                                                     "competition": competition['name'],
                                                    "places": 6})
 
-    @task
-    def logout(self):
+    def on_stop(self):
         self.client.get('/logout')
