@@ -1,15 +1,6 @@
 from locust import HttpUser, task, between
 
 
-club = {"name": "Club Test",
-          "email": "example@gmail.com",
-          "points": "20"}
-
-competition = {"name": "Competition Test",
-                "date": "2023-06-09 10:00:00",
-                "numberOfPlaces": "500"}
-
-
 class ProjectPerformanceTest(HttpUser):
     wait_time = between(1, 5)
 
@@ -18,19 +9,19 @@ class ProjectPerformanceTest(HttpUser):
 
     @task(3)
     def show_summary(self):
-        self.client.post('/show_summary', {"email": club['email']})
+        self.client.post('/show_summary', json={"email": "example@hotmail.com"})
 
     @task(2)
     def book(self):
-        competition_name = competition['name']
-        club_name = club['name']
+        competition_name = "My competition"
+        club_name = "The club test"
         self.client.get(f'/book/{competition_name}/{club_name}')
 
 
     @task
     def purchase_places(self):
-        self.client.post('/purchase_places', {"club": club['name'],
-                                                    "competition": competition['name'],
+        self.client.post('/purchase_places', json={"club": "The club test",
+                                                    "competition": "My competition",
                                                    "places": 6})
 
     def on_stop(self):
