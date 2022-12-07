@@ -20,7 +20,7 @@ class ProjectPerformanceTest(HttpUser):
     def show_summary(self):
         self.client.post('/show_summary', {"email": club['email']})
 
-    @task
+    @task(2)
     def book(self):
         competition_name = competition['name']
         club_name = club['name']
