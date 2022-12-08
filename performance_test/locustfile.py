@@ -16,10 +16,16 @@ class ProjectPerformanceTest(HttpUser):
     @task
     class SequenceOfTasks(SequentialTaskSet):
         wait_time = between(1, 5)
-        @task
-        def index(self):
-            self.client.get('/')
-            self.client.get('http://127.0.0.1:5000/')
+
+        def __init__(self, club, *args, **kwargs):
+            super().__init__(args, kwargs)
+            self.club = club
+
+        def on_start(self):
+            if len(CLUBS_CREDENTIALS) > 0:
+                self.club = CLUBS_CREDENTIALS.pop()
+                self.client.get('/')
+                self.client.get('http://127.0.0.1:5000/')
 
         @task
         def show_summary(self):
