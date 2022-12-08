@@ -7,11 +7,11 @@ class ProjectPerformanceTest(HttpUser):
     def on_start(self):
         self.client.get('/')
 
-    @task(3)
+    @task
     def show_summary(self):
         self.client.post('/show_summary', json={"email": "example@hotmail.com"})
 
-    @task(2)
+    @task
     def book(self):
         competition_name = "My competition"
         club_name = "The club test"
