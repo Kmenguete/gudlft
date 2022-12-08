@@ -1,6 +1,10 @@
 from locust import HttpUser, task, between, SequentialTaskSet
 
 
+CLUBS_CREDENTIALS = ["example@hotmail.com", "example2@hotmail.com", "example3@hotmail.com", "example4@hotmail.com",
+                     "example5@hotmail.com", "example6@hotmail.com"]
+
+
 class ProjectPerformanceTest(HttpUser):
     @task
     class SequenceOfTasks(SequentialTaskSet):
