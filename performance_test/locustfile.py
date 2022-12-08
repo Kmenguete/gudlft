@@ -1,4 +1,4 @@
-from locust import HttpUser, task, between, SequentialTaskSet
+from locust import HttpUser, task, between, TaskSet
 
 
 CLUBS_CREDENTIALS = ["example@hotmail.com", "example2@hotmail.com", "example3@hotmail.com", "example4@hotmail.com",
@@ -12,19 +12,18 @@ COMPETITIONS = [{"name": "Competition Test",
                 "numberOfPlaces": "90"}]
 
 
-class ProjectPerformanceTest(HttpUser):
+class ProjectPerformanceTest(TaskSet):
     @task
-    class SequenceOfTasks(SequentialTaskSet):
+    class SequenceOfTasks(HttpUser):
         wait_time = between(1, 5)
 
-        def __init__(self, club, *args, **kwargs):
-            super().__init__(args, kwargs)
-            self.club = club
+        club = "NOT FOUND"
+
 
         def on_start(self):
             if len(CLUBS_CREDENTIALS) > 0:
                 self.club = CLUBS_CREDENTIALS.pop()
-                self.client.get('/')
+                self.client.options('http://127.0.0.1:5000/')
                 self.client.get('http://127.0.0.1:5000/')
 
         @task
@@ -34,8 +33,8 @@ class ProjectPerformanceTest(HttpUser):
 
         @task
         def book(self):
-            competition_name = "My competition"
-            club_name = "The club test"
+            competition_name = COMPETITIONS[1]['name']
+            club_name = self.club['name']
             self.client.options(f'http://127.0.0.1:5000/book/{competition_name}/{club_name}')
             self.client.get(f'http://127.0.0.1:5000/book/{competition_name}/{club_name}')
 
@@ -43,10 +42,10 @@ class ProjectPerformanceTest(HttpUser):
         @task
         def purchase_places(self):
             self.client.options('http://127.0.0.1:5000/purchase_places')
-            self.client.post('http://127.0.0.1:5000/purchase_places', json={"club": "The club test",
-                                                        "competition": "My competition",
+            self.client.post('http://127.0.0.1:5000/purchase_places', json={"club": self.club['name'],
+                                                        "competition": COMPETITIONS[1]['name'],
                                                        "places": 6})
-        @task
-        def log_out(self):
+
+        def on_stop(self):
             self.client.options('http://127.0.0.1:5000/logout')
-            self.client.get('/logout')
+            self.client.get('http://127.0.0.1:5000/logout')
