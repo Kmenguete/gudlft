@@ -4,6 +4,13 @@ from locust import HttpUser, task, between, SequentialTaskSet
 CLUBS_CREDENTIALS = ["example@hotmail.com", "example2@hotmail.com", "example3@hotmail.com", "example4@hotmail.com",
                      "example5@hotmail.com", "example6@hotmail.com"]
 
+COMPETITIONS = [{"name": "Competition Test",
+                "date": "2023-06-09 10:00:00",
+                "numberOfPlaces": "50"},
+                {"name": "The Competition",
+                "date": "2023-01-05 17:30:00",
+                "numberOfPlaces": "90"}]
+
 
 class ProjectPerformanceTest(HttpUser):
     @task
