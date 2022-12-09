@@ -35,13 +35,14 @@ class User(HttpUser):
         club = "NOT FOUND"
 
         def on_start(self):
-            if len(CLUBS_CREDENTIALS)> 0:
-                self.club = CLUBS_CREDENTIALS.pop()
+            for i in range(0, len(CLUBS_CREDENTIALS)):
+                self.club = CLUBS_CREDENTIALS[i]
                 self.client.options('http://127.0.0.1:5000/')
                 self.client.get('http://127.0.0.1:5000/')
 
         @task
         def show_summary(self):
+            print("This request is not valid: " + self.club['email'])
             self.client.options('http://127.0.0.1:5000/show_summary')
             self.client.post('http://127.0.0.1:5000/show_summary', json={"email": self.club['email']})
 
