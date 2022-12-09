@@ -1,6 +1,6 @@
 import random
 
-from locust import HttpUser, task, between, TaskSet
+from locust import HttpUser, task, between, SequentialTaskSet
 
 CLUBS_CREDENTIALS = [{"name": "Club Test",
                       "email": "example@gmail.com",
@@ -29,37 +29,39 @@ COMPETITIONS = [{"name": "Competition Test",
                 "numberOfPlaces": "90"}]
 
 
-class ProjectPerformanceTest(HttpUser):
+class SequenceOfTask(SequentialTaskSet):
+
+    club = random.choice(CLUBS_CREDENTIALS)
+
+    def on_start(self):
+        self.client.options('http://127.0.0.1:5000/')
+        self.client.get('http://127.0.0.1:5000/')
 
     @task
-    class SequenceOfTask(TaskSet):
-        wait_time = between(1, 5)
+    def show_summary(self):
+        self.client.options('http://127.0.0.1:5000/show_summary')
+        self.client.post('http://127.0.0.1:5000/show_summary', json={"email": self.club['email']})
 
-        club = random.choice(CLUBS_CREDENTIALS)
+    @task
+    def book(self):
+        competition_name = COMPETITIONS[1]['name']
+        club_name = self.club['name']
+        self.client.options(f'http://127.0.0.1:5000/book/{competition_name}/{club_name}')
+        self.client.get(f'http://127.0.0.1:5000/book/{competition_name}/{club_name}')
 
-        def on_start(self):
-            self.client.options('http://127.0.0.1:5000/')
-            self.client.get('http://127.0.0.1:5000/')
+    @task
+    def purchase_places(self):
+        self.client.options('http://127.0.0.1:5000/purchase_places')
+        self.client.post('http://127.0.0.1:5000/purchase_places', json={"club": self.club['name'],
+                                                                        "competition": COMPETITIONS[1]['name'],
+                                                                        "places": 6})
 
-        @task
-        def show_summary(self):
-            self.client.options('http://127.0.0.1:5000/show_summary')
-            self.client.post('http://127.0.0.1:5000/show_summary', json={"email": self.club['email']})
+    def on_stop(self):
+        self.client.options('http://127.0.0.1:5000/logout')
+        self.client.get('http://127.0.0.1:5000/logout')
 
-        @task
-        def book(self):
-            competition_name = COMPETITIONS[1]['name']
-            club_name = self.club['name']
-            self.client.options(f'http://127.0.0.1:5000/book/{competition_name}/{club_name}')
-            self.client.get(f'http://127.0.0.1:5000/book/{competition_name}/{club_name}')
 
-        @task
-        def purchase_places(self):
-            self.client.options('http://127.0.0.1:5000/purchase_places')
-            self.client.post('http://127.0.0.1:5000/purchase_places', json={"club": self.club['name'],
-                                                                            "competition": COMPETITIONS[1]['name'],
-                                                                            "places": 6})
+class User(HttpUser):
 
-        def on_stop(self):
-            self.client.options('http://127.0.0.1:5000/logout')
-            self.client.get('http://127.0.0.1:5000/logout')
+    tasks = SequenceOfTask
+    wait_time = between(1, 5)
