@@ -1,3 +1,5 @@
+import random
+
 from locust import HttpUser, task, between, TaskSet
 
 CLUBS_CREDENTIALS = [{"name": "Club Test",
@@ -33,7 +35,7 @@ class ProjectPerformanceTest(HttpUser):
     class SequenceOfTask(TaskSet):
         wait_time = between(1, 5)
 
-        club = "NOT FOUND"
+        club = random.choice(CLUBS_CREDENTIALS)
 
         def on_start(self):
             if len(CLUBS_CREDENTIALS) > 0:
