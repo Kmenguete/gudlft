@@ -1,5 +1,4 @@
-from locust import HttpUser, task, between, TaskSet
-
+from locust import HttpUser, task, between, SequentialTaskSet
 
 CLUBS_CREDENTIALS = [{"name": "Club Test",
                       "email": "example@gmail.com",
@@ -28,14 +27,13 @@ COMPETITIONS = [{"name": "Competition Test",
                 "numberOfPlaces": "90"}]
 
 
+class ProjectPerformanceTest(HttpUser):
 
-class ProjectPerformanceTest(TaskSet):
     @task
-    class SequenceOfTasks(HttpUser):
+    class SequenceOfTask(SequentialTaskSet):
         wait_time = between(1, 5)
 
         club = "NOT FOUND"
-
 
         def on_start(self):
             if len(CLUBS_CREDENTIALS) > 0:
@@ -55,13 +53,12 @@ class ProjectPerformanceTest(TaskSet):
             self.client.options(f'http://127.0.0.1:5000/book/{competition_name}/{club_name}')
             self.client.get(f'http://127.0.0.1:5000/book/{competition_name}/{club_name}')
 
-
         @task
         def purchase_places(self):
             self.client.options('http://127.0.0.1:5000/purchase_places')
             self.client.post('http://127.0.0.1:5000/purchase_places', json={"club": self.club['name'],
-                                                        "competition": COMPETITIONS[1]['name'],
-                                                       "places": 6})
+                                                                            "competition": COMPETITIONS[1]['name'],
+                                                                            "places": 6})
 
         def on_stop(self):
             self.client.options('http://127.0.0.1:5000/logout')
