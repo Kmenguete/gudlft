@@ -1,4 +1,4 @@
-from locust import HttpUser, task, between, SequentialTaskSet
+from locust import HttpUser, task, between, TaskSet
 
 CLUBS_CREDENTIALS = [{"name": "Club Test",
                       "email": "example@gmail.com",
@@ -30,7 +30,7 @@ COMPETITIONS = [{"name": "Competition Test",
 class ProjectPerformanceTest(HttpUser):
 
     @task
-    class SequenceOfTask(SequentialTaskSet):
+    class SequenceOfTask(TaskSet):
         wait_time = between(1, 5)
 
         club = "NOT FOUND"
