@@ -1,3 +1,5 @@
+import random
+
 from locust import HttpUser, task, between, SequentialTaskSet
 
 CLUBS_CREDENTIALS = [{"name": "Club Test",
@@ -32,13 +34,11 @@ class User(HttpUser):
     @task
     class SequenceOfTask(SequentialTaskSet):
         wait_time = between(1, 5)
-        club = "NOT FOUND"
+        club = random.choice(CLUBS_CREDENTIALS)
 
         def on_start(self):
-            for i in range(0, len(CLUBS_CREDENTIALS)):
-                self.club = CLUBS_CREDENTIALS[i]
-                self.client.options('http://127.0.0.1:5000/')
-                self.client.get('http://127.0.0.1:5000/')
+            self.client.options('http://127.0.0.1:5000/')
+            self.client.get('http://127.0.0.1:5000/')
 
         @task
         def show_summary(self):
