@@ -38,10 +38,8 @@ class ProjectPerformanceTest(HttpUser):
         club = random.choice(CLUBS_CREDENTIALS)
 
         def on_start(self):
-            if len(CLUBS_CREDENTIALS) > 0:
-                self.club = CLUBS_CREDENTIALS.pop()
-                self.client.options('http://127.0.0.1:5000/')
-                self.client.get('http://127.0.0.1:5000/')
+            self.client.options('http://127.0.0.1:5000/')
+            self.client.get('http://127.0.0.1:5000/')
 
         @task
         def show_summary(self):
