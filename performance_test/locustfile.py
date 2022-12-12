@@ -35,7 +35,7 @@ class User(HttpUser):
         def show_summary(self):
             club = random.choice(clubs)
             self.client.options('http://127.0.0.1:5000/show_summary')
-            self.client.post('http://127.0.0.1:5000/show_summary', json={"email": club['email']})
+            self.client.post('http://127.0.0.1:5000/show_summary', {"email": club["email"]})
 
         @task
         def book(self):
@@ -51,9 +51,9 @@ class User(HttpUser):
             club = random.choice(clubs)
             competition = random.choice(competitions)
             self.client.options('http://127.0.0.1:5000/purchase_places')
-            self.client.post('http://127.0.0.1:5000/purchase_places', json={"club": club["name"],
-                                                                            "competition": competition["name"],
-                                                                            "places": 6})
+            self.client.post('http://127.0.0.1:5000/purchase_places', {"club": club["name"],
+                                                                       "competition": competition["name"],
+                                                                        "places": 6})
 
         def on_stop(self):
             self.client.options('http://127.0.0.1:5000/logout')
