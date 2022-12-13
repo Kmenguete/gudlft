@@ -61,5 +61,12 @@
    each issue that has been reported at https://github.com/OpenClassrooms-Student-Center/Python_Testing. Each
    issue has been successfully fixed. In other words, every test successfully passed. 
    The folder also contains a performance test. The performance test has been performed with 6 clubs logging at the 
-   same time.
+   same time. In the 'tests' folder, you will also find an integration test folder, in this integration test, I tested
+  how all the features, I added to the application interacts together. To conclude, I also checked my test coverage
+   and the code has a coverage rate of 98%.
 
+6. Conclusion and discussion for further development
+
+   Finally, I fixed issues that the team development would normally be able to fix. I can understand that
+   the team may be busy. In the future, the application will require a real authentication system and maybe
+   a real database management system.
