@@ -48,11 +48,12 @@ def show_summary():
         return response
 
 
-@app.route("/book/<competition>/<club>", methods=["GET"])
-def book(competition, club):
+@app.route("/book/<competition>/<club>/<number_of_places>", methods=["GET"])
+def book(competition, club, number_of_places):
     try:
         found_club = [c for c in clubs if c["name"] == club][0]
         found_competition = [c for c in competitions if c["name"] == competition][0]
+        found_places = [c for c in competitions if c["numberOfPlaces"] == number_of_places][0]
         if found_club and found_competition:
             if (
                 datetime.strptime(found_competition["date"], "%Y-%m-%d %H:%M:%S")
@@ -65,7 +66,7 @@ def book(competition, club):
                 return response
             else:
                 return render_template(
-                    "booking.html", club=club, competition=competition
+                    "booking.html", club=club, competition=competition, found_places=found_places
                 )
         else:
             flash("Something went wrong-please try again")
@@ -80,9 +81,7 @@ def book(competition, club):
 
 @app.route("/purchase_places", methods=["POST"])
 def purchase_places():
-    competition = [c for c in competitions if c["name"] == request.form["competition"]][
-        0
-    ]
+    competition = [c for c in competitions if c["name"] == request.form["competition"]][0]
     club = [c for c in clubs if c["name"] == request.form["club"]][0]
     places_required = int(request.form["places"])
     if places_required > 12:
@@ -101,7 +100,7 @@ def purchase_places():
         )
         club["points"] = int(club["points"]) - places_required
         flash("Great-booking complete!")
-        return render_template("welcome.html", club=club, competition=competition)
+        return redirect(url_for("get_back_to_welcome_page"))
 
 
 @app.route("/points_board", methods=["GET"])

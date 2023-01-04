@@ -5,11 +5,11 @@
     <title>Booking for {{competition['name']}} || GUDLFT</title>
 </head>
 <body>
-    <h2>{{competition['name']}}</h2>
-    Places available: {{competition['numberOfPlaces']}}
+    <h2>{{competition}}</h2>
+    Places available: {{found_places["numberOfPlaces"]}}
     <form action="/purchase_places" method="post">
-        <input type="hidden" name="club" value="{{club['name']}}">
-        <input type="hidden" name="competition" value="{{competition['name']}}">
+        <input type="hidden" name="club" value="{{club}}">
+        <input type="hidden" name="competition" value="{{competition}}">
         <label for="places">How many places?</label><input type="number" name="places" id=""/>
         <button type="submit">Book</button>
     </form>
