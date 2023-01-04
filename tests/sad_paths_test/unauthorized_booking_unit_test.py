@@ -1,8 +1,8 @@
 from gudlft import server
 
 
-def _book_places_page(client, competition, club):
-    response = client.get(f"/book/{competition}/{club}")
+def _book_places_page(client, competition, club, number_of_places):
+    response = client.get(f"/book/{competition}/{club}/{number_of_places}")
 
     assert competition == "Competition Test"
 
@@ -26,4 +26,5 @@ def test_should_not_be_able_to_book_places(client, mocker):
     )
 
     competition = "Competition Test"
-    _book_places_page(client, competition, club=None)
+    number_of_places = "50"
+    _book_places_page(client, competition, club=None, number_of_places=number_of_places)

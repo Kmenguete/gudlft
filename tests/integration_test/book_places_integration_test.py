@@ -27,7 +27,7 @@ def test_book_places(client, mocker):
     )
     assert response_show_summary.status_code == 200
 
-    response_book = client.get(f'/book/{competition["name"]}/{club["name"]}')
+    response_book = client.get(f'/book/{competition["name"]}/{club["name"]}/{competition["numberOfPlaces"]}')
     assert response_book.status_code == 200
 
     places = 6

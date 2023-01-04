@@ -19,8 +19,8 @@ def test_should_access_to_welcome_page(client, mocker):
     assert data.find("Welcome to the GUDLFT Registration Portal!") == -1
 
 
-def _should_find_competition_and_club(client, competition, club):
-    response = client.get(f"/book/{competition}/{club}")
+def _should_find_competition_and_club(client, competition, club, number_of_places):
+    response = client.get(f"/book/{competition}/{club}/{number_of_places}")
     assert competition == "Competition Test"
     assert club == "Club Test"
     assert response.status_code == 200
@@ -45,7 +45,8 @@ def test_should_access_to_book_places_page(client, mocker):
     )
     club = "Club Test"
     competition = "Competition Test"
-    _should_find_competition_and_club(client, competition, club)
+    number_of_places = "50"
+    _should_find_competition_and_club(client, competition, club, number_of_places)
 
 
 def _purchase_places(client, club, competition, places):
