@@ -6,7 +6,7 @@
 </head>
 <body>
     <h2>{{competition}}</h2>
-    Places available: {{found_places["numberOfPlaces"]}}
+    Places available: {{number_of_places}}
     <form action="/purchase_places" method="post">
         <input type="hidden" name="club" value="{{club}}">
         <input type="hidden" name="competition" value="{{competition}}">

@@ -15,6 +15,6 @@
         </li>
         {% endfor %}
     </ul>
-    <a href="{{ url_for('get_back_to_welcome_page')}}">Back to welcome page</a>
+    <a href="{{ url_for('get_back_to_welcome_page', club_name=current_club['name'])}}">Back to welcome page</a>
 </body>
 </html>

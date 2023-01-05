@@ -54,7 +54,7 @@ def book(competition, club, number_of_places):
         found_club = [c for c in clubs if c["name"] == club][0]
         found_competition = [c for c in competitions if c["name"] == competition][0]
         found_places = [c for c in competitions if c["numberOfPlaces"] == number_of_places][0]
-        if found_club and found_competition:
+        if found_club and found_competition and found_places:
             if (
                 datetime.strptime(found_competition["date"], "%Y-%m-%d %H:%M:%S")
                 < datetime.now()
@@ -66,7 +66,7 @@ def book(competition, club, number_of_places):
                 return response
             else:
                 return render_template(
-                    "booking.html", club=club, competition=competition, found_places=found_places
+                    "booking.html", club=club, competition=competition, number_of_places=number_of_places
                 )
         else:
             flash("Something went wrong-please try again")
@@ -100,14 +100,14 @@ def purchase_places():
         )
         club["points"] = int(club["points"]) - places_required
         flash("Great-booking complete!")
-        return redirect(url_for("get_back_to_welcome_page"))
+        return redirect(url_for("get_back_to_welcome_page", club_name=club["name"]))
 
 
-@app.route("/points_board", methods=["GET"])
-def get_points_of_clubs():
+@app.route("/points_board/<club_name>", methods=["GET"])
+def get_points_of_clubs(club_name):
     try:
-        club = [c for c in clubs][0]
-        return render_template("points_board.html", clubs=clubs), club
+        current_club = [c for c in clubs if c["name"] == club_name][0]
+        return render_template("points_board.html", clubs=clubs, current_club=current_club)
     except IndexError:
         response = make_response(
             "<p>You did not provide the necessary credentials to access this page.<p>"
@@ -116,10 +116,10 @@ def get_points_of_clubs():
         return response
 
 
-@app.route("/back_to_welcome_page", methods=["GET"])
-def get_back_to_welcome_page():
+@app.route("/back_to_welcome_page/<club_name>", methods=["GET"])
+def get_back_to_welcome_page(club_name):
     try:
-        club = [club for club in clubs][0]
+        club = [c for c in clubs if c["name"] == club_name][0]
         return render_template("welcome.html", club=club, competitions=competitions)
     except IndexError:
         response = make_response(
