@@ -26,7 +26,7 @@ def test_should_access_to_points_boards(client, mocker):
         [{"name": "Club Test", "email": "example@gmail.com", "points": "20"}],
     )
     club = clubs[0]["name"]
-    response = client.get("/points_board", follow_redirects=True)
+    response = client.get(f"/points_board/{club}", follow_redirects=True)
     assert club == "Club Test"
     assert response.status_code == 200
     data = response.data.decode()
@@ -36,8 +36,14 @@ def test_should_access_to_points_boards(client, mocker):
     )
 
 
-def test_should_return_to_welcome_page(client):
-    response = client.get("/back_to_welcome_page")
+def test_should_return_to_welcome_page(client, mocker):
+    clubs = mocker.patch.object(
+        server,
+        "clubs",
+        [{"name": "Club Test", "email": "example@gmail.com", "points": "20"}],
+    )
+    club_name = clubs[0]["name"]
+    response = client.get(f"/back_to_welcome_page/{club_name}")
     assert response.status_code == 200
 
 
