@@ -17,11 +17,13 @@ def test_book_places(client, mocker):
     )
     assert response_show_summary.status_code == 200
 
-    response_get_points_of_clubs = client.get("/points_board")
+    club_name = "Club Test"
+
+    response_get_points_of_clubs = client.get(f"/points_board/{club_name}")
 
     assert response_get_points_of_clubs.status_code == 200
 
-    response_back_to_welcome_page = client.get("/back_to_welcome_page")
+    response_back_to_welcome_page = client.get(f"/back_to_welcome_page/{club_name}")
 
     assert response_back_to_welcome_page.status_code == 200
 
